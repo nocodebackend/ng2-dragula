@@ -187,37 +187,37 @@ export class DragulaService {
       dropIndex = this.domIndexOf(dropElm, target);
       let sourceModel = drake.models[drake.containers.indexOf(source)];
       let targetModel = drake.models[drake.containers.indexOf(target)];
-      if (!sourceModel) return;
-
       let item: any;
-      if (target === source) {
-        sourceModel = sourceModel.slice(0);
-        item = sourceModel.splice(dragIndex, 1)[0];
-        sourceModel.splice(dropIndex, 0, item);
-        // this was true before we cloned and updated sourceModel,
-        // but targetModel still has the old value
-        targetModel = sourceModel;
-      } else {
-        const isCopying = dragElm !== dropElm;
-        item = sourceModel[dragIndex];
-        if (isCopying) {
-          if (!options.copyItem) {
-            throw new Error("If you have enabled `copy` on a group, you must provide a `copyItem` function.");
-          };
-          item = options.copyItem(item);
-        }
-
-        if (!isCopying) {
+      if (sourceModel) {
+        if (target === source) {
           sourceModel = sourceModel.slice(0);
-          sourceModel.splice(dragIndex, 1);
-        }
-        targetModel = targetModel.slice(0);
-        targetModel.splice(dropIndex, 0, item);
-        if (isCopying) {
-          try {
-            target.removeChild(dropElm);
-            // eslint-disable-next-line no-empty
-          } catch (e) {}
+          item = sourceModel.splice(dragIndex, 1)[0];
+          sourceModel.splice(dropIndex, 0, item);
+          // this was true before we cloned and updated sourceModel,
+          // but targetModel still has the old value
+          targetModel = sourceModel;
+        } else {
+          const isCopying = dragElm !== dropElm;
+          item = sourceModel[dragIndex];
+          if (isCopying) {
+            if (!options.copyItem) {
+              throw new Error("If you have enabled `copy` on a group, you must provide a `copyItem` function.");
+            };
+            item = options.copyItem(item);
+          }
+
+          if (!isCopying) {
+            sourceModel = sourceModel.slice(0);
+            sourceModel.splice(dragIndex, 1);
+          }
+          targetModel = targetModel.slice(0);
+          targetModel.splice(dropIndex, 0, item);
+          if (isCopying) {
+            try {
+              target.removeChild(dropElm);
+              // eslint-disable-next-line no-empty
+            } catch (e) {}
+          }
         }
       }
       this.dispatch$.next({
