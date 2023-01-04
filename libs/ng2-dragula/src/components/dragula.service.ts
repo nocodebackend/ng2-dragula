@@ -187,6 +187,8 @@ export class DragulaService {
       dropIndex = this.domIndexOf(dropElm, target);
       let sourceModel = drake.models[drake.containers.indexOf(source)];
       let targetModel = drake.models[drake.containers.indexOf(target)];
+      if (!sourceModel) return;
+
       let item: any;
       if (target === source) {
         sourceModel = sourceModel.slice(0);
